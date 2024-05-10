@@ -1,0 +1,38 @@
+pipeline{
+    agent any
+    stages{
+        stage("checkout by Amen"){
+            steps{
+                git url: "https://github.com/okuoim/DevOpsClassCodes"
+            }
+        }
+        stage("compile By Amen"){
+            steps{
+               sh "mvn compile"
+            }
+        }
+        stage("testing My Code"){
+            steps{
+                sh "mvn test"
+            }
+        }
+        stage("Quality Assurance of the code"){
+            steps{
+            sh "mvn checkstyle:checkstyle"
+            recordIssues sourceCodeRetention: 'LAST_BUILD', tools: [checkStyle()]
+            }
+        }
+        stage("package"){
+            steps{
+                sh "mvn package"
+            }
+        }
+         stage("Deploying the the project in Tomcat"){
+            steps{
+                sh "sudo cp /var/lib/jenkins/workspace/addressbook-pipeline/target/addressbook.war /opt/apache-tomcat-8.5.100/webapps"
+            }
+        }
+        
+    }
+    
+}
