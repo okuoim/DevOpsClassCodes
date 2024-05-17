@@ -1,0 +1,36 @@
+pipeline{
+    agent any
+    stages{
+        stage("Checkout My Code"){
+            steps{
+                git url: "https://github.com/okuoim/DevOpsClassCodes"
+            }
+        }
+        stage("compile My Code"){
+            steps{
+               sh "mvn compile"
+            }
+        }
+        stage("testing MY Code"){
+            steps{
+                sh "mvn test"
+            }
+        }
+        stage("Quality Assurance Of My Code"){
+            steps{
+              sh "mvn checkstyle:checkstyle"
+              recordIssues sourceCodeRetention: 'LAST_BUILD', tools: [checkStyle()]
+              
+            }
+     
+      }
+        stage("Packaging MY Code"){
+            steps{
+                sh "mvn package"
+            }
+       }
+    }
+  }
+    
+    
+    
